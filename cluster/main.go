@@ -28,6 +28,7 @@ func main() {
 	})
 	http.HandleFunc("/traffic", func(write http.ResponseWriter, request *http.Request) {
 		container_counter_system.OnTraffic()
+		fmt.Fprintf(write, "Traffic recieved.\n")
 	})
 	log.Println(fmt.Sprintf("Listening on %s:%s", ip, port))
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%s", ip, port), nil))
