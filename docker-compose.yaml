@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   redis:
-    container_name: redis_container
+    container_name: redis
     image: redis:7.2.4-alpine
     restart: always
     ports:
@@ -12,3 +12,18 @@ services:
       - REDIS_PASSWORD=password
       - REDIS_PORT=6379
       - REDIS_DATABASES=16
+  cluster1:
+    container_name: cluster_1
+    build: ./cluster
+    ports:
+      - 8000:8000
+    working_dir: /app
+    volumes:
+      - ./cluster:/app/
+    command: nodemon --exec go run main.go --signal SIGTERM --legacy-watch --ext .go,.mod,.sum
+    depends_on:
+      - redis
+    environment:
+      - REDIS_PASSWORD=password
+      - REDIS_ADDR=redis:6379
+      - REDIS_DB=0
