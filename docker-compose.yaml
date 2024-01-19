@@ -27,3 +27,4 @@ services:
       - REDIS_PASSWORD=password
       - REDIS_ADDR=redis:6379
       - REDIS_DB=0
+      - CONTAINER_NUM=1

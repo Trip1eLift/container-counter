@@ -1,44 +1,34 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"strconv"
+	"time"
 
-	"github.com/redis/go-redis/v9"
+	"github.com/Trip1eLift/container-counter/cluster/container_counter_system"
 )
 
 const ip = "0.0.0.0"
 const port = "8000"
 
 func main() {
-	redisOps(context.Background())
+	go func() {
+		for {
+			time.Sleep(5 * time.Second)
+			count := container_counter_system.GetCount()
+			fmt.Printf("container %s with count: %d\n", os.Getenv("CONTAINER_NUM"), count)
+		}
+	}()
 
 	http.HandleFunc("/health", func(write http.ResponseWriter, request *http.Request) {
 		log.Println("Golang healthcheck.")
 		fmt.Fprintf(write, "Healthy golang server.\n")
 	})
+	http.HandleFunc("/traffic", func(write http.ResponseWriter, request *http.Request) {
+		container_counter_system.OnTraffic()
+	})
 	log.Println(fmt.Sprintf("Listening on %s:%s", ip, port))
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%s", ip, port), nil))
-}
-
-func redisOps(ctx context.Context) {
-	client := redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("REDIS_ADDR"),
-		Password: os.Getenv("REDIS_PASSWORD"),
-		DB:       Atoi(os.Getenv("REDIS_DB")),
-	})
-
-	err := client.Ping(ctx).Err()
-	if err != nil {
-		log.Fatal(fmt.Sprintf("Redis connection err: %v", err))
-	}
-}
-
-func Atoi(s string) int {
-	num, _ := strconv.Atoi(s)
-	return num
 }
