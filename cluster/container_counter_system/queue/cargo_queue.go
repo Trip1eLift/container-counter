@@ -29,7 +29,7 @@ func Pop_package() model.Package {
 	// prevent Pop_package being called multiple times at once
 	// Without level2 lock, when 2 Pop_package are waiting and a package arrive,
 	// they can rush to stage 2 together and break the code.
-	Packages.mu_level2.Lock()
+	//Packages.mu_level2.Lock() // cause sever delay issue...
 
 	// Stage 1: Waiting room
 	for {
@@ -48,7 +48,7 @@ func Pop_package() model.Package {
 	pack := Packages.boxes[0]
 	Packages.boxes = Packages.boxes[1:]
 	Packages.mu.Unlock()
-	Packages.mu_level2.Unlock()
+	//Packages.mu_level2.Unlock()
 
 	return pack
 }

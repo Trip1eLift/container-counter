@@ -1,11 +1,21 @@
 GET http://127.0.0.1:7000/health
 
-###
+### Toggle 1
 
 POST http://127.0.0.1:7000/toggle
 content-type: application/json
 
 {
-    "mode": 1,
-    "foo": "bar"
+    "mode": "1",
+    "interval": "3"
+}
+
+### Toggle 2
+
+POST http://127.0.0.1:7000/toggle
+content-type: application/json
+
+{
+    "mode": "2",
+    "interval": "3"
 }

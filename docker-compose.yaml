@@ -12,6 +12,7 @@ services:
       - REDIS_PASSWORD=password
       - REDIS_PORT=6379
       - REDIS_DATABASES=16
+
   client:
     container_name: client_mock
     build: ./client
@@ -21,13 +22,35 @@ services:
     volumes:
       - ./client:/app/
     command: nodemon --exec go run main.go --signal SIGTERM --legacy-watch --ext .go,.mod,.sum
+    environment:
+      - CONTAINER_1=container1:8000
+      - CONTAINER_2=container2:8000
+      - CONTAINER_3=container3:8000
+      - CONTAINER_4=container4:8000
+      - CONTAINER_5=container5:8000
+      - CONTAINER_6=container6:8000
+      - CONTAINER_7=container7:8000
+      - CONTAINER_8=container8:8000
+      - CONTAINER_9=container9:8000
+      - CONTAINER_10=container10:8000
     depends_on:
       - redis
-  cluster1:
-    container_name: cluster_1
+      - container1
+      - container2
+      - container3
+      - container4
+      # - container5
+      # - container6
+      # - container7
+      # - container8
+      # - container9
+      # - container10
+
+  container1:
+    container_name: container_1
     build: ./cluster
     ports:
-      - 8000:8000
+      - 8001:8000
     working_dir: /app
     volumes:
       - ./cluster:/app/
@@ -38,4 +61,148 @@ services:
       - REDIS_PASSWORD=password
       - REDIS_ADDR=redis:6379
       - REDIS_DB=0
-      - CONTAINER_NUM=1
+      - CONTAINER_ID=1
+  container2:
+    container_name: container_2
+    build: ./cluster
+    ports:
+      - 8002:8000
+    working_dir: /app
+    volumes:
+      - ./cluster:/app/
+    command: nodemon --exec go run main.go --signal SIGTERM --legacy-watch --ext .go,.mod,.sum
+    depends_on:
+      - redis
+    environment:
+      - REDIS_PASSWORD=password
+      - REDIS_ADDR=redis:6379
+      - REDIS_DB=0
+      - CONTAINER_ID=2
+  container3:
+    container_name: container_3
+    build: ./cluster
+    ports:
+      - 8003:8000
+    working_dir: /app
+    volumes:
+      - ./cluster:/app/
+    command: nodemon --exec go run main.go --signal SIGTERM --legacy-watch --ext .go,.mod,.sum
+    depends_on:
+      - redis
+    environment:
+      - REDIS_PASSWORD=password
+      - REDIS_ADDR=redis:6379
+      - REDIS_DB=0
+      - CONTAINER_ID=3
+  container4:
+    container_name: container_4
+    build: ./cluster
+    ports:
+      - 8004:8000
+    working_dir: /app
+    volumes:
+      - ./cluster:/app/
+    command: nodemon --exec go run main.go --signal SIGTERM --legacy-watch --ext .go,.mod,.sum
+    depends_on:
+      - redis
+    environment:
+      - REDIS_PASSWORD=password
+      - REDIS_ADDR=redis:6379
+      - REDIS_DB=0
+      - CONTAINER_ID=4
+  # container5:
+  #   container_name: container_5
+  #   build: ./cluster
+  #   ports:
+  #     - 8005:8000
+  #   working_dir: /app
+  #   volumes:
+  #     - ./cluster:/app/
+  #   command: nodemon --exec go run main.go --signal SIGTERM --legacy-watch --ext .go,.mod,.sum
+  #   depends_on:
+  #     - redis
+  #   environment:
+  #     - REDIS_PASSWORD=password
+  #     - REDIS_ADDR=redis:6379
+  #     - REDIS_DB=0
+  #     - CONTAINER_ID=5
+  # container6:
+  #   container_name: container_6
+  #   build: ./cluster
+  #   ports:
+  #     - 8006:8000
+  #   working_dir: /app
+  #   volumes:
+  #     - ./cluster:/app/
+  #   command: nodemon --exec go run main.go --signal SIGTERM --legacy-watch --ext .go,.mod,.sum
+  #   depends_on:
+  #     - redis
+  #   environment:
+  #     - REDIS_PASSWORD=password
+  #     - REDIS_ADDR=redis:6379
+  #     - REDIS_DB=0
+  #     - CONTAINER_ID=6
+  # container7:
+  #   container_name: container_7
+  #   build: ./cluster
+  #   ports:
+  #     - 8007:8000
+  #   working_dir: /app
+  #   volumes:
+  #     - ./cluster:/app/
+  #   command: nodemon --exec go run main.go --signal SIGTERM --legacy-watch --ext .go,.mod,.sum
+  #   depends_on:
+  #     - redis
+  #   environment:
+  #     - REDIS_PASSWORD=password
+  #     - REDIS_ADDR=redis:6379
+  #     - REDIS_DB=0
+  #     - CONTAINER_ID=7
+  # container8:
+  #   container_name: container_8
+  #   build: ./cluster
+  #   ports:
+  #     - 8008:8000
+  #   working_dir: /app
+  #   volumes:
+  #     - ./cluster:/app/
+  #   command: nodemon --exec go run main.go --signal SIGTERM --legacy-watch --ext .go,.mod,.sum
+  #   depends_on:
+  #     - redis
+  #   environment:
+  #     - REDIS_PASSWORD=password
+  #     - REDIS_ADDR=redis:6379
+  #     - REDIS_DB=0
+  #     - CONTAINER_ID=8
+  # container9:
+  #   container_name: container_9
+  #   build: ./cluster
+  #   ports:
+  #     - 8009:8000
+  #   working_dir: /app
+  #   volumes:
+  #     - ./cluster:/app/
+  #   command: nodemon --exec go run main.go --signal SIGTERM --legacy-watch --ext .go,.mod,.sum
+  #   depends_on:
+  #     - redis
+  #   environment:
+  #     - REDIS_PASSWORD=password
+  #     - REDIS_ADDR=redis:6379
+  #     - REDIS_DB=0
+  #     - CONTAINER_ID=9
+  # container10:
+  #   container_name: container_10
+  #   build: ./cluster
+  #   ports:
+  #     - 8010:8000
+  #   working_dir: /app
+  #   volumes:
+  #     - ./cluster:/app/
+  #   command: nodemon --exec go run main.go --signal SIGTERM --legacy-watch --ext .go,.mod,.sum
+  #   depends_on:
+  #     - redis
+  #   environment:
+  #     - REDIS_PASSWORD=password
+  #     - REDIS_ADDR=redis:6379
+  #     - REDIS_DB=0
+  #     - CONTAINER_ID=10

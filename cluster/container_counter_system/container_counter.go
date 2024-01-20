@@ -3,19 +3,19 @@ package container_counter_system
 import (
 	"context"
 	"fmt"
+	"os"
 	"sync"
 	"time"
 
 	"github.com/Trip1eLift/container-counter/cluster/container_counter_system/broadcast"
 	"github.com/Trip1eLift/container-counter/cluster/container_counter_system/model"
 	"github.com/Trip1eLift/container-counter/cluster/container_counter_system/queue"
-	"github.com/google/uuid"
 )
 
 type Manager struct {
 	self_id       string
 	mu_sleep      sync.RWMutex
-	sleep_until   time.Time
+	live_until    time.Time
 	mu_containers sync.RWMutex
 	containers    map[string]time.Time
 	bc            *broadcast.Client
@@ -24,16 +24,16 @@ type Manager struct {
 var manager Manager
 
 func init() {
-	manager.self_id = uuid.New().String()
-	manager.sleep_until = time.Now()
+	manager.self_id = os.Getenv("CONTAINER_ID")
+	manager.live_until = time.Now().Add(-1 * time.Second)
 	manager.containers = make(map[string]time.Time)
 	manager.bc = broadcast.New(context.Background())
 	manager.bc.Subscribe(context.Background())
 
-	// clean up expired containers every 5s
+	// clean up expired containers every 1s
 	go func() {
 		for {
-			time.Sleep(5 * time.Second)
+			time.Sleep(1 * time.Second)
 			manager.mu_containers.Lock()
 			now := time.Now()
 			for container_id, live_until := range manager.containers {
@@ -49,38 +49,94 @@ func init() {
 	go func() {
 		for {
 			pack := queue.Pop_package() // only return when new pack arrives
-			fmt.Printf("pack recieved %v\n", pack)
+			// fmt.Printf("pack recieved %v\n", pack)
+
+			// if dead() {
+			// 	// When I am dead, I don't count.
+			// 	continue
+			// }
+			// I keep counting when I am dead (reduce delay problem)
+
+			if pack.Container_id == manager.self_id {
+				// I do not retrieve my own id from redis.
+				continue
+			}
+
 			manager.mu_containers.Lock()
+			_, new_container := manager.containers[pack.Container_id] // If this is a new container, the noob doesn't know I am alive, so I need to re-enroll myself.
 			manager.containers[pack.Container_id] = pack.Live_until
 			manager.mu_containers.Unlock()
+
+			if new_container {
+				go func() {
+					time.Sleep(1 * time.Second)
+					publish_enrollment()
+					// delay publish to noobs in case noobs are not ready to recieve
+				}()
+			}
 		}
 	}()
 }
 
 // For every 30s, publish self to redis with 35s ttl
 func OnTraffic() {
-	manager.mu_sleep.RLock()
-	if time.Now().Before(manager.sleep_until) {
-		manager.mu_sleep.RUnlock()
+	// I am alive
+	if dead() == false {
 		return
-	} else {
-		manager.mu_sleep.RUnlock()
 	}
+
+	now := time.Now()
 
 	manager.mu_sleep.Lock()
-	manager.sleep_until = time.Now().Add(30 * time.Second) // now + 30s
+	manager.live_until = now.Add(30 * time.Second) // now + 30s (spawn + 30s)
 	manager.mu_sleep.Unlock()
 
+	manager.mu_containers.Lock()
+	manager.containers[manager.self_id] = now.Add(35 * time.Second) // now + 35s (spawn + 35s)
+	manager.mu_containers.Unlock()
+
+	publish_enrollment()
+}
+
+func dead() bool {
+	manager.mu_sleep.RLock()
+	dead := time.Now().After(manager.live_until)
+	manager.mu_sleep.RUnlock()
+	return dead
+}
+
+func publish_enrollment() {
+	if dead() {
+		return
+	}
+
+	// enroll self to other containers
+	manager.mu_sleep.RLock()
 	pack := model.Package{
 		Container_id: manager.self_id,
-		Live_until:   time.Now().Add(35 * time.Second), // now + 30s
+		Live_until:   manager.live_until.Add(5 * time.Second), // spawn + 35s
 	}
+	manager.mu_sleep.RUnlock()
 	manager.bc.Publish(context.Background(), pack)
 }
 
 func GetCount() int {
+	keys := getMap()
+
 	manager.mu_containers.RLock()
 	count := len(manager.containers)
 	manager.mu_containers.RUnlock()
+
+	fmt.Printf("container map: %v count: %d\n", keys, count)
 	return count
+}
+
+func getMap() []string {
+	keys := []string{}
+	manager.mu_containers.RLock()
+	for k := range manager.containers {
+		keys = append(keys, k)
+	}
+	manager.mu_containers.RUnlock()
+	return keys
 }
