@@ -6,10 +6,10 @@ Mimic client traffics to continue to send traffic to cluster.
 
 ### 2 clusters with client traffic interval of 3
 ```text
-curl --header "Content-Type: application/json" --request POST --data '{"mode":"1","interval":"3"}' http://localhost:7000/toggle
+curl --header "Content-Type: application/json" --request POST --data '{"mode":"1","interval":"3"}' http://localhost:7001/toggle
 ```
 
 ### 5 clusters with client traffic interval of 5
 ```text
-curl --header "Content-Type: application/json" --request POST --data '{"mode":"5","interval":"6"}' http://localhost:7000/toggle
+curl --header "Content-Type: application/json" --request POST --data '{"mode":"5","interval":"6"}' http://localhost:7001/toggle
 ```

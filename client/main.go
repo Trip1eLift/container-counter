@@ -11,7 +11,7 @@ import (
 )
 
 const ip = "0.0.0.0"
-const port = "7000"
+const port = "7001"
 
 var mode int = 0
 var interval int = 3

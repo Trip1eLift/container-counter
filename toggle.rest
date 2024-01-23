@@ -1,6 +1,6 @@
 ### Toggle 0
 
-POST http://127.0.0.1:7000/toggle
+POST http://127.0.0.1:7001/toggle
 content-type: application/json
 
 {
@@ -10,7 +10,7 @@ content-type: application/json
 
 ### Toggle 1
 
-POST http://127.0.0.1:7000/toggle
+POST http://127.0.0.1:7001/toggle
 content-type: application/json
 
 {
@@ -20,7 +20,7 @@ content-type: application/json
 
 ### Toggle 2
 
-POST http://127.0.0.1:7000/toggle
+POST http://127.0.0.1:7001/toggle
 content-type: application/json
 
 {
@@ -30,7 +30,7 @@ content-type: application/json
 
 ### Toggle 3
 
-POST http://127.0.0.1:7000/toggle
+POST http://127.0.0.1:7001/toggle
 content-type: application/json
 
 {
@@ -40,7 +40,7 @@ content-type: application/json
 
 ### Toggle 4
 
-POST http://127.0.0.1:7000/toggle
+POST http://127.0.0.1:7001/toggle
 content-type: application/json
 
 {
@@ -50,7 +50,7 @@ content-type: application/json
 
 ### Toggle 5
 
-POST http://127.0.0.1:7000/toggle
+POST http://127.0.0.1:7001/toggle
 content-type: application/json
 
 {
@@ -60,7 +60,7 @@ content-type: application/json
 
 ### Toggle 6
 
-POST http://127.0.0.1:7000/toggle
+POST http://127.0.0.1:7001/toggle
 content-type: application/json
 
 {
@@ -70,7 +70,7 @@ content-type: application/json
 
 ### Toggle 7
 
-POST http://127.0.0.1:7000/toggle
+POST http://127.0.0.1:7001/toggle
 content-type: application/json
 
 {
@@ -80,7 +80,7 @@ content-type: application/json
 
 ### Toggle 8
 
-POST http://127.0.0.1:7000/toggle
+POST http://127.0.0.1:7001/toggle
 content-type: application/json
 
 {
@@ -90,7 +90,7 @@ content-type: application/json
 
 ### Toggle 9
 
-POST http://127.0.0.1:7000/toggle
+POST http://127.0.0.1:7001/toggle
 content-type: application/json
 
 {
@@ -100,7 +100,7 @@ content-type: application/json
 
 ### Toggle 10
 
-POST http://127.0.0.1:7000/toggle
+POST http://127.0.0.1:7001/toggle
 content-type: application/json
 
 {
