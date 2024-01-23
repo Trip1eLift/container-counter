@@ -1,7 +1,7 @@
 # container-counter
 PoC to count active containers of a cluster.
 
-To run all service with docker, do:
+To run all services with docker, do:
 ```text
 make start
 ```
