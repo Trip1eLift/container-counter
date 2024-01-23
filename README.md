@@ -1,12 +1,18 @@
 # container-counter
 PoC to count active containers of a cluster.
 
-To run all services with docker, do:
+## 1. Go to demo branch
+Please use [demo](https://github.com/Trip1eLift/container-counter/tree/demo) for demo run where it removes some development tool from docker.
+```text
+git checkout demo
+```
+
+## 2. Run services with docker, do:
 ```text
 make start
 ```
 
-## Client Mock
+## 3. Client Mock
 Mimic client traffics to continue to send traffic to cluster.
 
 1. Interval is default to 3
