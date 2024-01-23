@@ -1,8 +1,8 @@
 FROM golang:1.21-alpine3.19
 
 RUN apk add curl
-RUN apk add --update nodejs npm
-RUN npm install -g nodemon
+# RUN apk add --update nodejs npm
+# RUN npm install -g nodemon
 
 WORKDIR /app
 
