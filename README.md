@@ -1,18 +1,23 @@
 # container-counter
 PoC to count active containers of a cluster.
 
+To run all service with docker, do:
+```text
+make start
+```
+
 ## Client Mock
 Mimic client traffics to continue to send traffic to cluster.
 
 1. Interval is default to 3
 2. mode can go from 0 to 10 (0-4 for now)
 
-### 2 cluster containers with client traffic interval of 3
+### 2 active containers with client traffic interval of 3
 ```text
 curl --header "Content-Type: application/json" --request POST --data '{"mode":"2","interval":"3"}' http://localhost:7000/toggle
 ```
 
-### 4 cluster containers with client traffic interval of 2
+### 4 active containers with client traffic interval of 2
 ```text
 curl --header "Content-Type: application/json" --request POST --data '{"mode":"4","interval":"2"}' http://localhost:7000/toggle
 ```
