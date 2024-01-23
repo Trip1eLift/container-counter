@@ -1,8 +1,8 @@
-GET http://127.0.0.1:7000/health
+GET http://127.0.0.1:7001/health
 
 ### Toggle 1
 
-POST http://127.0.0.1:7000/toggle
+POST http://127.0.0.1:7001/toggle
 content-type: application/json
 
 {
@@ -12,7 +12,7 @@ content-type: application/json
 
 ### Toggle 2
 
-POST http://127.0.0.1:7000/toggle
+POST http://127.0.0.1:7001/toggle
 content-type: application/json
 
 {

@@ -14,12 +14,12 @@ Mimic client traffics to continue to send traffic to cluster.
 
 ### 2 active containers with client traffic interval of 3
 ```text
-curl --header "Content-Type: application/json" --request POST --data '{"mode":"2","interval":"3"}' http://localhost:7000/toggle
+curl --header "Content-Type: application/json" --request POST --data '{"mode":"2","interval":"3"}' http://localhost:7001/toggle
 ```
 
 ### 4 active containers with client traffic interval of 2
 ```text
-curl --header "Content-Type: application/json" --request POST --data '{"mode":"4","interval":"2"}' http://localhost:7000/toggle
+curl --header "Content-Type: application/json" --request POST --data '{"mode":"4","interval":"2"}' http://localhost:7001/toggle
 ```
 
 ### Visit [toggle.rest](toggle.rest) for all toggle mode suggestion
