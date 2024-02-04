@@ -12,6 +12,8 @@ import (
 	"github.com/Trip1eLift/container-counter/cluster/container_counter_system/queue"
 )
 
+const baseTime = 30 * time.Second
+
 type Manager struct {
 	self_id       string
 	mu_sleep      sync.RWMutex
@@ -63,16 +65,18 @@ func init() {
 			}
 
 			manager.mu_containers.Lock()
-			_, new_container := manager.containers[pack.Container_id] // If this is a new container, the noob doesn't know I am alive, so I need to re-enroll myself.
+			_, old_container := manager.containers[pack.Container_id] // If this is a new container, the noob doesn't know I am alive, so I need to re-enroll myself.
 			manager.containers[pack.Container_id] = pack.Live_until
 			manager.mu_containers.Unlock()
 
-			if new_container {
-				go func() {
-					time.Sleep(1 * time.Second)
-					publish_enrollment()
-					// delay publish to noobs in case noobs are not ready to recieve
-				}()
+			if !old_container {
+				publish_enrollment()
+				// delay is unnecessary
+				// go func() {
+				// 	time.Sleep(1 * time.Second)
+				// 	publish_enrollment()
+				// 	// delay publish to noobs in case noobs are not ready to recieve
+				// }()
 			}
 		}
 	}()
@@ -86,13 +90,15 @@ func OnTraffic() {
 	}
 
 	now := time.Now()
+	//aliveTime := baseTime + utils.RandTimeS(5) // 25s + 0-5s
+	aliveTime := baseTime // rand alive time is unnecessary
 
 	manager.mu_sleep.Lock()
-	manager.live_until = now.Add(30 * time.Second) // now + 30s (spawn + 30s)
+	manager.live_until = now.Add(aliveTime) // now + aliveTime (spawn + 30s)
 	manager.mu_sleep.Unlock()
 
 	manager.mu_containers.Lock()
-	manager.containers[manager.self_id] = now.Add(35 * time.Second) // now + 35s (spawn + 35s)
+	manager.containers[manager.self_id] = now.Add(aliveTime + 5*time.Second) // now + aliveTime + 5s (spawn + 35s)
 	manager.mu_containers.Unlock()
 
 	publish_enrollment()

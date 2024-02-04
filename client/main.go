@@ -35,9 +35,11 @@ func init() {
 			time.Sleep(time.Duration(interval) * time.Second)
 			for i := 0; i < mode; i++ {
 				http.Get(fmt.Sprintf("http://%s/traffic", addresses[i]))
-				fmt.Printf("Sending request to container %d: %s\n", i+1, addresses[i])
 				// resp, err := http.Get(fmt.Sprintf("http://%s/traffic", addresses[i]))
 				// fmt.Printf("resp: %v err: %v\n", resp, err)
+			}
+			if mode > 0 {
+				fmt.Printf("Sending request to containers %d-%d\n", 1, mode)
 			}
 		}
 	}()
