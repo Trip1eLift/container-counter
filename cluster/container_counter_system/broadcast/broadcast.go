@@ -69,6 +69,9 @@ func (c *Client) Publish(ctx context.Context, pack model.Package) {
 		panic(fmt.Errorf("msg packing error: %v\n", err))
 	}
 
+	// redis can handle concurrent publish as long as the events aren't too many
+	// utils.RandSleepS(1) // rand sleep reduce chance of redis race condition in local
+
 	err = c.Redis.Publish(ctx, Channel, payload).Err()
 	if err != nil {
 		panic(fmt.Errorf("pubsub publish error: %v\n", err))
